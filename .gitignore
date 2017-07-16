@@ -1,0 +1,11 @@
+node_modules
+
+*.js
+*.d.ts
+*.js.map
+*.db
+
+!/Gruntfile.js
+.tscache
+!/test/
+!/test/run.js
