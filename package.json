@@ -9,7 +9,6 @@
     "@mo/core": "git+https://code.aliyun.com/mo/core.git#publish",
     "@mo/express": "git+https://code.aliyun.com/mo/express.git#publish",
     "@mo/express-default-module": "git+https://code.aliyun.com/mo/express-default-module.git#publish",
-    "@types/sequelize": "^4.0.65",
     "injection-js": "^2.1.0",
     "sequelize": "^4.3.2",
     "sequelize-typescript": "^0.3.5"
@@ -17,6 +16,8 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.1.0",
+    "@types/sequelize": "^4.0.65",
+    "@types/express-session": "^1.15.1",
     "grunt-ts": "^6.0.0-beta.16",
     "ts-node": "^3.2.0",
     "typescript": "^2.4.1"

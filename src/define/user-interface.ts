@@ -1,6 +1,7 @@
 export interface IUser {
-    username:string;
-    group:string;
+    id:String;
+    username:String;
+    group:String;
 }
 
 

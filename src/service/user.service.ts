@@ -10,7 +10,7 @@ import {AuthenticationToken} from "../decoractor/symbol";
 
 @Injectable()
 export class UserService {
-    constructor(@Inject(AuthenticationToken) public authentication:Authentication) {
+    constructor(@Inject(AuthenticationToken) public authentication: Authentication) {
     }
 
     encryptionMethod(str: string): string {
@@ -36,6 +36,7 @@ export class UserService {
             if (user) {
                 let group = yield user.$get('group');
                 let p: IUser = {
+                    id: user.id,
                     username: user.username,
                     group: group.group
                 };
@@ -59,9 +60,9 @@ export class UserService {
 
             //todo
             let result = true;
-            if(!userGroup)
+            if (!userGroup)
                 throw new Error('the default group has wrong value');
-            try{
+            try {
                 yield user.save();
             } catch (e) {
                 result = false;
@@ -70,6 +71,7 @@ export class UserService {
             if (result) {
                 yield user.$set('group', userGroup);
                 let ret: IUser = {
+                    id: user.id,
                     username: user.username,
                     group: userGroup.group
                 };
@@ -87,16 +89,15 @@ export class UserService {
         let p = this;
         return co(function *() {
             userModel.password = p.encryptionMethod(userModel.password);
-            let ret:User = yield User.find({
+            let ret: User = yield User.find({
                 where: {
                     username: userModel.username,
                     password: userModel.password,
-                    state:true
+                    state: true
                 }
             });
 
-            if(ret)
-            {
+            if (ret) {
                 ret.state = false;
                 ret = yield ret.save();
             }
@@ -107,5 +108,6 @@ export class UserService {
 }
 
 /**
- * Created by yskun on 2017/7/15.
- */
+    * Created by yskun on 2017/7/15.
+    * MoProject COPYRIGHT
+    */
