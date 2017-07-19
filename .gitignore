@@ -9,3 +9,5 @@ node_modules
 .tscache
 !/test/
 !/test/run.js
+out
+package-lock.json
