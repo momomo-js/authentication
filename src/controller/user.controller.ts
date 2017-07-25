@@ -82,7 +82,7 @@ export class UserController {
 
             if (ret) {
                 req.request.session.user = ret;
-                res.status(0);
+                res.status(0).body(ret);
             } else {
                 res.status(1);
             }
@@ -124,7 +124,7 @@ export class UserController {
             let ret = yield p.userService.register(user);
             if (ret) {
                 req.request.session.user = ret;
-                res.status(0);
+                res.status(0).body(ret);
             } else {
                 res.status(1);
             }
