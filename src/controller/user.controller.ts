@@ -121,6 +121,8 @@ export class UserController {
     register(req: Origin, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
         let p = this;
         return co(function *() {
+
+            //todo 添加同用户名注册问题
             let ret = yield p.userService.register(user);
             if (ret) {
                 req.request.session.user = ret;
