@@ -1,9 +1,10 @@
 import {co, Controller, Method} from "@mo/core";
-import {DEL, Express, GET, POST, ResponseHandler,Origin} from "@mo/express";
+import {DEL, Express, GET, POST, ResponseHandler, Origin} from "@mo/express";
 import {UserViewModel} from "../viewmodel/user.viewmodel";
 import {UserService} from "../service/user.service";
 import {Auth} from "../decoractor/auth";
 import e = require("express");
+import {IUser} from "../define/user-interface";
 
 let loginResponds = [
     {
@@ -54,6 +55,17 @@ let delResponds = [
     }
 ];
 
+let statusResponds = [
+    {
+        status: 0,
+        message: '用户已登陆'
+    },
+    {
+        status: 1,
+        message: '用户未登录'
+    }
+];
+
 @Controller({
     models: [UserViewModel]
 })
@@ -68,7 +80,7 @@ export class UserController {
     })
     login(model: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
         let p = this;
-        return co(function *() {
+        return co(function* () {
 
             if (!model.username || !model.password) {
                 return res.status(102);
@@ -99,7 +111,7 @@ export class UserController {
         group: ['all']
     })
     logout(req: Origin, res: ResponseHandler): Promise<ResponseHandler> {
-        return co(function *() {
+        return co(function* () {
             if (req.request.session.user) {
                 req.request.session.user = null;
                 res.status(0);
@@ -120,7 +132,7 @@ export class UserController {
     })
     register(req: Origin, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
         let p = this;
-        return co(function *() {
+        return co(function* () {
 
             //todo 添加同用户名注册问题
             let ret = yield p.userService.register(user);
@@ -142,9 +154,9 @@ export class UserController {
     @Auth({
         group: ['self']
     })
-    del(user: UserViewModel, res: ResponseHandler,req:Origin): Promise<ResponseHandler> {
+    del(user: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
         let p = this;
-        return co(function *() {
+        return co(function* () {
             let ret = yield  p.userService.del(user);
             if (ret) {
                 req.request.session.user = null;
@@ -154,6 +166,21 @@ export class UserController {
             }
             return res;
         })
+    }
+
+    @Method(GET, '/status')
+    @Express({
+        responds: statusResponds
+    })
+    status(origin: Origin, res: ResponseHandler): Promise<ResponseHandler> {
+        return co(function* () {
+            let nowUser: IUser = origin.request.session.user;
+            if (nowUser) {
+                return res.status(0);
+            } else {
+                return res.status(1);
+            }
+        });
     }
 }
 
