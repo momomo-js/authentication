@@ -6,14 +6,13 @@
   "types": "index.d.ts",
   "private": true,
   "dependencies": {
-    "@mo/core": "git+https://code.aliyun.com/mo/core.git#publish",
-    "@mo/express": "git+https://code.aliyun.com/mo/express.git#publish",
-    "@mo/express-default-module": "git+https://code.aliyun.com/mo/express-default-module.git#publish",
+    "@mo/core": "git+https://code.aliyun.com/mo/core.git#version/0.2.0",
+    "@mo/express": "git+https://code.aliyun.com/mo/express.git#version/0.2.0",
+    "@mo/express-default-module": "git+https://code.aliyun.com/mo/express-default-module.git#version/0.2.0",
     "injection-js": "^2.1.0",
     "sequelize": "^4.3.2",
     "@types/express-session": "^1.15.1",
-    "@types/sequelize": "^4.0.65",
-    "sequelize-typescript": "0.5.0-beta.2"
+    "sequelize-typescript": "^0.5.0-beta.2"
   },
   "devDependencies": {
     "grunt": "^1.0.1",

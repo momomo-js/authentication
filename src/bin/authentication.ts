@@ -3,9 +3,7 @@ import {User} from "../model/user";
 import {UserGroup} from "../model/user-group";
 import {Component, Input, Option, RouterManager} from "@mo/core";
 import {AuthenticationSystem} from "../model/authentication-system";
-import {IAuthenticationOptions} from "../define/authentication-options.interface";
 import {IUserGroup} from "../define/user-group.interface";
-import {AuthenticationToken} from "../decoractor/symbol";
 import {Injectable} from "injection-js";
 
 @Injectable()
@@ -69,7 +67,6 @@ export class Authentication extends Component {
             throw new Error('no auth-orm');
         }
 
-        this.routerManager.addService([{provide: AuthenticationToken, useValue: this}]);
     }
 
     onStart(): void {
