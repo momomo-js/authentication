@@ -2,8 +2,11 @@ import {Authentication} from "../src/bin/authentication";
 import {Sequelize} from "sequelize-typescript";
 
 import {ExpressDefaultPluginPackage} from '@mo/express-default-module'
-import {MoServer,co} from "@mo/core";
+import {co, Instance, MoServer, Option} from "@mo/core";
 import {ExpressServer} from '@mo/express'
+import {AuthenticationModule} from "../src/bin/authentication-module";
+import {IAuthenticationOptions} from "../src/define/authentication-options.interface";
+import {IUserGroup} from "../src/define/user-group.interface";
 
 let orm: Sequelize = new Sequelize({
     name: 'db',
@@ -13,10 +16,20 @@ let orm: Sequelize = new Sequelize({
     storage: 'test.db'
 });
 
-co(function *() {
 
-    let u = new Authentication({
-        group: [{
+@Instance({
+    servers: [ExpressServer],
+    modules: [AuthenticationModule],
+    plugins: [ExpressDefaultPluginPackage],
+    instance: {
+        name: 'TEST',
+        host: 'localhost',
+        port: 3000
+    }
+})
+class TestInstance {
+    @Option('auth-group')
+    auth: IUserGroup[] = [{
             group: 'guest',
             description: '访客'
         }, {
@@ -24,16 +37,16 @@ co(function *() {
             description: '管理员'
         }, {
             group: 'test'
-        }]
-    });
-    u.defaultGroup = 'guest';
-    yield u.setOrm(orm);
+        }];
 
-    let server = new MoServer();
-    let express = new ExpressServer();
-    server.addServer(express);
-    express.addPlugin(new ExpressDefaultPluginPackage());
-    server.addModule(u);
-    server.startSever();
-});
+    @Option('auth-orm')
+    ins_orm = orm;
+
+    @Option('auth-def-group')
+    defaultGroup: string = 'guest';
+}
+
+MoServer
+    .create(TestInstance)
+    .then(value => value.startSever());
 

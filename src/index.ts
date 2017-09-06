@@ -1,4 +1,6 @@
 export * from './bin/authentication';
+export * from './bin/authentication-module';
+
 
 export * from './decoractor/auth';
 export * from './decoractor/auth-self';

@@ -1,6 +1,10 @@
+import {Body} from "@mo/express/src/decoration/parameter";
+
 export class UserViewModel {
-    username = 'string';
-    password = 'string';
+    @Body
+    username;
+    @Body
+    password;
 }
 
 /**

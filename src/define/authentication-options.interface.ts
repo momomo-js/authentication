@@ -1,6 +1,8 @@
 import {IUserGroup} from "./user-group.interface";
 export interface IAuthenticationOptions{
     group:IUserGroup[];
+    salt?: string;
+    defaultGroup?: string;
 }
 
 /**

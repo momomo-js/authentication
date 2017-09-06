@@ -78,29 +78,26 @@ export class UserController {
     @Express({
         responds: loginResponds
     })
-    login(model: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
-        let p = this;
-        return co(function* () {
+    async login(model: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
 
-            if (!model.username || !model.password) {
-                return res.status(102);
-            }
+        if (!model.username || !model.password) {
+            return res.status(102);
+        }
 
-            if (req.request.session.user) {
-                return res.status(101);
-            }
+        if (req.request.session.user) {
+            return res.status(101);
+        }
 
-            let ret = yield p.userService.auth(model);
+        let ret = await this.userService.auth(model);
 
-            if (ret) {
-                req.request.session.user = ret;
-                res.status(0).body(ret);
-            } else {
-                res.status(1);
-            }
+        if (ret) {
+            req.request.session.user = ret;
+            res.status(0).body(ret);
+        } else {
+            res.status(1);
+        }
 
-            return res;
-        });
+        return res;
     }
 
     @Method(GET, '/logout')
@@ -110,17 +107,15 @@ export class UserController {
     @Auth({
         group: ['all']
     })
-    logout(req: Origin, res: ResponseHandler): Promise<ResponseHandler> {
-        return co(function* () {
-            if (req.request.session.user) {
-                req.request.session.user = null;
-                res.status(0);
-            }
-            else {
-                res.status(1);
-            }
-            return res;
-        })
+    async logout(req: Origin, res: ResponseHandler): Promise<ResponseHandler> {
+        if (req.request.session.user) {
+            req.request.session.user = null;
+            res.status(0);
+        }
+        else {
+            res.status(1);
+        }
+        return res;
     }
 
     @Method(POST, '/register')
@@ -130,21 +125,18 @@ export class UserController {
     @Auth({
         group: ['!all']
     })
-    register(req: Origin, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
-        let p = this;
-        return co(function* () {
+    async register(req: Origin, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
 
-            //todo 添加同用户名注册问题
-            let ret = yield p.userService.register(user);
-            if (ret) {
-                req.request.session.user = ret;
-                res.status(0).body(ret);
-            } else {
-                res.status(1);
-            }
+        //todo 添加同用户名注册问题
+        let ret = await this.userService.register(user);
+        if (ret) {
+            req.request.session.user = ret;
+            res.status(0).body(ret);
+        } else {
+            res.status(1);
+        }
 
-            return res;
-        });
+        return res;
     }
 
     @Method(DEL, '/del')
@@ -154,33 +146,28 @@ export class UserController {
     @Auth({
         group: ['self']
     })
-    del(user: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
-        let p = this;
-        return co(function* () {
-            let ret = yield  p.userService.del(user);
-            if (ret) {
-                req.request.session.user = null;
-                res.status(0);
-            } else {
-                res.status(1);
-            }
-            return res;
-        })
+    async del(user: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
+        let ret = await this.userService.del(user);
+        if (ret) {
+            req.request.session.user = null;
+            res.status(0);
+        } else {
+            res.status(1);
+        }
+        return res;
     }
 
     @Method(GET, '/status')
     @Express({
         responds: statusResponds
     })
-    status(origin: Origin, res: ResponseHandler): Promise<ResponseHandler> {
-        return co(function* () {
-            let nowUser: IUser = origin.request.session.user;
-            if (nowUser) {
-                return res.status(0);
-            } else {
-                return res.status(1);
-            }
-        });
+    async status(origin: Origin, res: ResponseHandler): Promise<ResponseHandler> {
+        let nowUser: IUser = origin.request.session.user;
+        if (nowUser) {
+            return res.status(0);
+        } else {
+            return res.status(1);
+        }
     }
 }
 
