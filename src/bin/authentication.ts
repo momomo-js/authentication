@@ -1,7 +1,7 @@
 import {Sequelize} from "sequelize-typescript";
 import {User} from "../model/user";
 import {UserGroup} from "../model/user-group";
-import {Component, Input, Option, RouterManager} from "@mo/core";
+import {Component, Input, Option} from "@mo/core";
 import {AuthenticationSystem} from "../model/authentication-system";
 import {IUserGroup} from "../define/user-group.interface";
 import {Injectable} from "injection-js";
@@ -21,7 +21,7 @@ export class Authentication extends Component {
     public group: IUserGroup[] = null;
 
     //constructor
-    constructor(private routerManager: RouterManager) {
+    constructor() {
         super();
 
     }
@@ -41,7 +41,7 @@ export class Authentication extends Component {
         });
 
         if (!state || state.code === 'false') {
-            let initState = new AuthenticationSystem({
+            await new AuthenticationSystem({
                 prop: 'initState',
                 code: 'true'
             }).save();

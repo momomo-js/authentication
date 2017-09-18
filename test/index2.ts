@@ -1,11 +1,9 @@
-import {Authentication} from "../src/bin/authentication";
 import {Sequelize} from "sequelize-typescript";
 
 import {ExpressDefaultPluginPackage} from '@mo/express-default-module'
-import {co, Instance, MoServer, Option} from "@mo/core";
+import {Instance, MoServer, Option} from "@mo/core";
 import {ExpressServer} from '@mo/express'
 import {AuthenticationModule} from "../src/bin/authentication-module";
-import {IAuthenticationOptions} from "../src/define/authentication-options.interface";
 import {IUserGroup} from "../src/define/user-group.interface";
 
 let orm: Sequelize = new Sequelize({

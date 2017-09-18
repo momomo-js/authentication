@@ -1,10 +1,9 @@
-import {co, Controller, Method} from "@mo/core";
-import {DEL, Express, GET, POST, ResponseHandler, Origin} from "@mo/express";
+import {Controller, Method} from "@mo/core";
+import {DEL, Express, GET, POST, ResponseHandler} from "@mo/express";
 import {UserViewModel} from "../viewmodel/user.viewmodel";
 import {UserService} from "../service/user.service";
 import {Auth} from "../decoractor/auth";
-import e = require("express");
-import {IUser} from "../define/user-interface";
+import {UserSession} from "../bin/user-session";
 
 let loginResponds = [
     {
@@ -78,20 +77,20 @@ export class UserController {
     @Express({
         responds: loginResponds
     })
-    async login(model: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
+    async login(model: UserViewModel, res: ResponseHandler, userSession: UserSession): Promise<ResponseHandler> {
 
         if (!model.username || !model.password) {
             return res.status(102);
         }
 
-        if (req.request.session.user) {
+        if (userSession.has()) {
             return res.status(101);
         }
 
         let ret = await this.userService.auth(model);
 
         if (ret) {
-            req.request.session.user = ret;
+            userSession.set(ret);
             res.status(0).body(ret);
         } else {
             res.status(1);
@@ -107,9 +106,9 @@ export class UserController {
     @Auth({
         group: ['all']
     })
-    async logout(req: Origin, res: ResponseHandler): Promise<ResponseHandler> {
-        if (req.request.session.user) {
-            req.request.session.user = null;
+    async logout(userSession: UserSession, res: ResponseHandler): Promise<ResponseHandler> {
+        if (userSession.has()) {
+            userSession.delete();
             res.status(0);
         }
         else {
@@ -125,12 +124,12 @@ export class UserController {
     @Auth({
         group: ['!all']
     })
-    async register(req: Origin, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
+    async register(userSession: UserSession, res: ResponseHandler, user: UserViewModel): Promise<ResponseHandler> {
 
         //todo 添加同用户名注册问题
         let ret = await this.userService.register(user);
         if (ret) {
-            req.request.session.user = ret;
+            userSession.set(ret);
             res.status(0).body(ret);
         } else {
             res.status(1);
@@ -146,10 +145,10 @@ export class UserController {
     @Auth({
         group: ['self']
     })
-    async del(user: UserViewModel, res: ResponseHandler, req: Origin): Promise<ResponseHandler> {
+    async del(userSession: UserSession, user: UserViewModel, res: ResponseHandler): Promise<ResponseHandler> {
         let ret = await this.userService.del(user);
         if (ret) {
-            req.request.session.user = null;
+            userSession.delete();
             res.status(0);
         } else {
             res.status(1);
@@ -161,9 +160,8 @@ export class UserController {
     @Express({
         responds: statusResponds
     })
-    async status(origin: Origin, res: ResponseHandler): Promise<ResponseHandler> {
-        let nowUser: IUser = origin.request.session.user;
-        if (nowUser) {
+    async status(userSession: UserSession, res: ResponseHandler): Promise<ResponseHandler> {
+        if (userSession.has()) {
             return res.status(0);
         } else {
             return res.status(1);

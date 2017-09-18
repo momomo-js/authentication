@@ -1,40 +1,42 @@
-import {ExpressBeforeController, ExpressServer, ResponseHandler} from "@mo/express";
-import {IController, Plugin, PluginPackage} from "@mo/core";
-import * as e from "express";
+import {ExpressBeforeController, ExpressServer, Origin, ResponseHandler} from "@mo/express";
+import {Plugin, PluginPackage} from "@mo/core";
 import {IUser} from "../define/user-interface";
 import {GROUP} from "../decoractor/symbol";
+import {ControllerFunction} from "@mo/express/src/bin/function-di";
+import {UserSession} from "../bin/user-session";
 
 @PluginPackage(ExpressServer)
 export class AuthPluginPackage {
 
     @Plugin(ExpressBeforeController)
-    judge(req: e.Request, res: ResponseHandler, cIns: IController, cFun: Function) {
-        let user: IUser = req['session'].user;
-        let group: string[] = Reflect.getMetadata(GROUP, cIns, cFun.name);
+    judge(origin: Origin, res: ResponseHandler, controller: ControllerFunction) {
+        let user: IUser = origin.request['session'].user;
+        let userSession = new UserSession(origin);
+        let req = origin.request;
+        let group: string[] = controller.getMetaData(GROUP);
         if (group) {
             for (let g of group) {
                 switch (g) {
                     case 'all':
                         if (user && user.group)
-                            return true;
+                            return userSession;
                         break;
                     case '!all':
                         if (!user)
-                            return true;
+                            return userSession;
                         break;
                     case 'self':
                         if (user && req.body.username && req.body.username === user.username)
-                            return true;
+                            return userSession;
                         break;
                     default:
                         if (user.group == g)
-                            return true;
+                            return userSession;
                         break;
                 }
-
             }
         } else {
-            return true;
+            return userSession;
         }
         res.status(200).message('无访问权限');
         return false;
