@@ -1,4 +1,4 @@
-import {Body} from "@mo/express/src/decoration/parameter";
+import {Body} from "@mo/express";
 
 export class UserViewModel {
     @Body

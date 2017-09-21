@@ -2,8 +2,8 @@ import {ExpressBeforeController, ExpressServer, Origin, ResponseHandler} from "@
 import {Plugin, PluginPackage} from "@mo/core";
 import {IUser} from "../define/user-interface";
 import {GROUP} from "../decoractor/symbol";
-import {ControllerFunction} from "@mo/express/src/bin/function-di";
 import {UserSession} from "../bin/user-session";
+import {ControllerFunction} from "@mo/express/src/define/controller-function.class";
 
 @PluginPackage(ExpressServer)
 export class AuthPluginPackage {
