@@ -1,7 +1,7 @@
 import {Sequelize} from "sequelize-typescript";
 
 import {ExpressDefaultPluginPackage} from '@mo/express-default-module'
-import {Instance, MoServer, Option} from "@mo/core";
+import {Instance, Mo, Moon} from "@mo/core";
 import {ExpressServer} from '@mo/express'
 import {AuthenticationModule} from "../src/bin/authentication-module";
 import {IUserGroup} from "../src/define/user-group.interface";
@@ -26,7 +26,7 @@ let orm: Sequelize = new Sequelize({
     }
 })
 class TestInstance {
-    @Option('auth-group')
+    @Moon('auth-group')
     auth: IUserGroup[] = [{
             group: 'guest',
             description: '访客'
@@ -37,14 +37,14 @@ class TestInstance {
             group: 'test'
         }];
 
-    @Option('auth-orm')
+    @Moon('auth-orm')
     ins_orm = orm;
 
-    @Option('auth-def-group')
+    @Moon('auth-def-group')
     defaultGroup: string = 'guest';
 }
 
-MoServer
+Mo
     .create(TestInstance)
     .then(value => value.startSever());
 

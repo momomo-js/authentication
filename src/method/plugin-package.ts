@@ -1,19 +1,18 @@
-import {ExpressBeforeController, ExpressServer, Origin, ResponseHandler} from "@mo/express";
+import {CFunc, ExpressBeforeController, ExpressServer, Origin, ResponseHandler} from "@mo/express";
 import {Plugin, PluginPackage} from "@mo/core";
 import {IUser} from "../define/user-interface";
 import {GROUP} from "../decoractor/symbol";
 import {UserSession} from "../bin/user-session";
-import {ControllerFunction} from "@mo/express/src/define/controller-function.class";
 
 @PluginPackage(ExpressServer)
 export class AuthPluginPackage {
 
     @Plugin(ExpressBeforeController)
-    judge(origin: Origin, res: ResponseHandler, controller: ControllerFunction) {
+    judge(origin: Origin, res: ResponseHandler, cFunc: CFunc) {
         let user: IUser = origin.request['session'].user;
         let userSession = new UserSession(origin);
         let req = origin.request;
-        let group: string[] = controller.getMetaData(GROUP);
+        let group: string[] = cFunc.getMetadata(GROUP);
         if (group) {
             for (let g of group) {
                 switch (g) {

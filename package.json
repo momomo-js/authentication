@@ -9,11 +9,10 @@
     "@mo/core": "git+https://code.aliyun.com/mo/core.git#version/0.3.0",
     "@mo/express": "git+https://code.aliyun.com/mo/express.git#version/0.3.0",
     "@mo/express-default-module": "git+https://code.aliyun.com/mo/express-default-module.git#version/0.3.0",
-    "@types/express-session": "^1.15.1",
     "injection-js": "^2.1.0",
-    "sequelize": "^4.8.4",
+    "sequelize": "^4.10.0",
     "sequelize-typescript": "^0.5.0",
-    "sqlite3": "^3.1.11"
+    "sqlite3": "^3.1.12"
   },
   "devDependencies": {
     "grunt": "^1.0.1",

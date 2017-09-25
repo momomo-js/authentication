@@ -4,15 +4,15 @@ import {UserViewModel} from "../viewmodel/user.viewmodel";
 import * as crypto from "crypto";
 import {UserGroup} from "../model/user-group";
 import {Injectable} from "injection-js";
-import {Input} from "@mo/core";
+import {MoonOption} from "@mo/core";
 
 @Injectable()
 export class UserService {
 
-    @Input('auth-salt')
+    @MoonOption('auth-salt')
     salt: string = null;
 
-    @Input('auth-def-group')
+    @MoonOption('auth-def-group')
     defaultGroup: string = null;
 
     constructor() {
@@ -21,7 +21,7 @@ export class UserService {
     encryptionMethod(str: string): string {
         let s = str + this.salt;
         const hash = crypto.createHash('sha256');
-        hash.update(str);
+        hash.update(s);
         return hash.digest('hex');
     }
 
@@ -38,12 +38,11 @@ export class UserService {
 
         if (user) {
             let group: UserGroup = <UserGroup> await user.$get('group');
-            let p: IUser = {
+            return {
                 id: user.id,
                 username: user.username,
                 group: group.group
             };
-            return p;
         }
         return null;
     }
@@ -69,15 +68,12 @@ export class UserService {
 
         if (result) {
             await user.$set('group', userGroup);
-            let ret: IUser = {
+            return {
                 id: user.id,
                 username: user.username,
                 group: userGroup.group
             };
-
-            return ret;
         }
-
         else {
             return null;
         }

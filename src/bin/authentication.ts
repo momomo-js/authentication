@@ -1,23 +1,23 @@
 import {Sequelize} from "sequelize-typescript";
 import {User} from "../model/user";
 import {UserGroup} from "../model/user-group";
-import {Component, Input, Option} from "@mo/core";
 import {AuthenticationSystem} from "../model/authentication-system";
 import {IUserGroup} from "../define/user-group.interface";
 import {Injectable} from "injection-js";
+import {MoBasic, Moon, MoonOption, OnInit} from "@mo/core";
 
 @Injectable()
-export class Authentication extends Component {
+export class Authentication extends MoBasic implements OnInit{
 
     //属性设置
     //密码盐设置
-    @Option('auth-salt')
+    @Moon('auth-salt')
     public salt: string = 'sadfafdfkdhfdhfdafhkdbdskboeu';
 
-    @Option('auth-def-group')
+    @Moon('auth-def-group')
     defaultGroup: string = 'default';
 
-    @Input('auth-group')
+    @MoonOption('auth-group')
     public group: IUserGroup[] = null;
 
     //constructor
@@ -26,7 +26,7 @@ export class Authentication extends Component {
 
     }
 
-    @Input('auth-orm')
+    @MoonOption('auth-orm')
     orm: Sequelize = null;
 
     async setOrm(): Promise<any> {
@@ -69,11 +69,6 @@ export class Authentication extends Component {
 
     }
 
-    onStart(): void {
-    }
-
-    onStop(): void {
-    }
 }
 
 /**
